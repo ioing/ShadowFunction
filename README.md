@@ -18,3 +18,39 @@ sDoc(`
   console.log(document.body.getElementsByTagName("div")[0].innerText)
 `)({console})
 ```
+类型鉴权配置：
+```js
+let shadowFunction 
+shadowFunction = new ShadowFunction({    
+Node: [      
+  'nodeName',      
+  'nodeType',      
+  'textContent'    
+ ],    
+ Element: [      
+   'style',      
+   'onblur',      
+   'onfocus',      
+   'onscroll',      
+   'offsetWidth',      
+   'offsetHeight',      
+   'clientWidth',      
+   'clientHeight',      
+   'innerText',      
+   'setAttribute',      
+   'removeAttribute',      
+   'createTextNode',      
+   'addEventListener',      
+   'getElementsByTagName'    
+ ],   
+ HTMLDivElement: []
+})
+shadowFunction(`
+  document.appendChild(document.createElement("div"))
+`)({document})
+```
+Proto 等限制
+```js
+new ShadowFunction('console.log(a.prototype)')({console, a: {}}) // undefined
+new ShadowFunction('console.log(a.valueOf.__proto__)')({console, a: {}}) // undefined
+```
