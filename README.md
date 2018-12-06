@@ -49,7 +49,7 @@ shadowFunction(`
   document.appendChild(document.createElement("div"))
 `)({document})
 ```
-Proto 等限制
+原型链限制
 ```js
 new ShadowFunction('console.log(a.prototype)')({console, a: {}}) // undefined
 new ShadowFunction('console.log(a.valueOf.__proto__)')({console, a: {}}) // undefined
