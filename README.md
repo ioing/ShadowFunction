@@ -54,3 +54,36 @@ Proto 等限制
 new ShadowFunction('console.log(a.prototype)')({console, a: {}}) // undefined
 new ShadowFunction('console.log(a.valueOf.__proto__)')({console, a: {}}) // undefined
 ```
+可以使用上面的类鉴权配置开放原型链方法。
+#ShadowDocument
+执行沙盒节点安全同步
+```js
+let shadowDoc
+shadowDoc = new ShadowDocument(document.body, `    
+  <div>123</div>    
+  <div>        
+    <div>345</div>    
+  </div>
+`)
+shadowDoc(`    
+  document.body.append($template.content);    
+  console.log(123, document.body.getElementsByTagName("div"));     
+  let i = 0;     
+  setInterval(function () {        
+    document.body.getElementsByTagName("div")[0].setAttribute("a", i);        
+    document.body.getElementsByTagName("div")[1].innerText = i;         
+    i++;     
+  }, 5000);    
+  document.body.getElementsByTagName("div")[0].addEventListener("click", function (e) {  
+    document.body.getElementsByTagName("div")[0].innerText = Date.now();         
+    console.log(e.pageX)    
+  }, false)`)({    
+    console,     
+    setInterval: function (fn, t) {        
+      setInterval(function () {            
+        new ShadowFunction('fn()')({fn})        
+      }, t)    
+    }
+  }
+)
+```
